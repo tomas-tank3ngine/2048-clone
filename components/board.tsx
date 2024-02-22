@@ -10,17 +10,21 @@ export default function Board() {
   const initialized = useRef(false);
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     switch (e.code) {
       case "ArrowUp":
-        dispatch({type: "move_up"})
+        dispatch({ type: "move_up" });
+        break;
+
+      case "ArrowDown":
+        dispatch({ type: "move_down" });
         break;
 
       default:
         break;
     }
-  }
+  };
 
   const renderGrid = () => {
     const cells: JSX.Element[] = [];
@@ -40,12 +44,22 @@ export default function Board() {
     );
   };
 
+  //Initialize board
   useEffect(() => {
     if (initialized.current === false) {
       dispatch({ type: "create_tile", tile: { position: [0, 2], value: 2 } });
       dispatch({ type: "create_tile", tile: { position: [0, 1], value: 2 } });
       initialized.current = true;
     }
+  }, []);
+
+  //key input
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   return (

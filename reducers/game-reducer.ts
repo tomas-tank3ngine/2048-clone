@@ -8,7 +8,10 @@ import { tileCountPerDimension } from "@/constants";
 
 //this is an array of many arrays of strings
 type State = { board: string[][]; tiles: TileMap };
-type Action = { type: "create_tile"; tile: Tile } | { type: "move_up"};
+type Action =
+  | { type: "create_tile"; tile: Tile }
+  | { type: "move_up" }
+  | { type: "move_down" };
 
 function createBoard() {
   const board: string[][] = [];
@@ -27,53 +30,80 @@ export default function gameReducer(
   action: Action,
 ) {
   switch (action.type) {
-    case "create_tile":
-      {
-        const tileId = uid();
-        const [x, y] = action.tile.position;
-        const newBoard = JSON.parse(JSON.stringify(state.board));
-        newBoard[y][x] = tileId;
+    case "create_tile": {
+      const tileId = uid();
+      const [x, y] = action.tile.position;
+      const newBoard = JSON.parse(JSON.stringify(state.board));
+      newBoard[y][x] = tileId;
 
-        return {
-          ...state,
-          board: newBoard,
-          tiles: {
-            ...state.tiles,
-            [tileId]: action.tile,
-          },
-        };
-      }
+      return {
+        ...state,
+        board: newBoard,
+        tiles: {
+          ...state.tiles,
+          [tileId]: action.tile,
+        },
+      };
+    }
 
-      case "move_up": {
-        //iterate through board state and scan all x and y arrays, then update the position
-        //of each tile up to the first free cell starting from the top of the column.
+    case "move_up": {
+      //iterate through board state and scan all x and y arrays, then update the position
+      //of each tile up to the first free cell starting from the top of the column.
 
-        const newBoard = createBoard();
-        const newTiles: TileMap = {}
+      const newBoard = createBoard();
+      const newTiles: TileMap = {};
 
-        for (let x = 0; x < tileCountPerDimension; x++) {
-          let newY = 0; //cell at the top of the board has index 0
+      for (let x = 0; x < tileCountPerDimension; x++) {
+        let newY = 0; //cell at the top of the board has index 0
 
-          for (let y = 0; y < tileCountPerDimension; y++) {
-            const tileId = state.board[y][x]
+        for (let y = 0; y < tileCountPerDimension; y++) {
+          const tileId = state.board[y][x];
 
-            if(!isNil(tileId)) {
-              newBoard[newY][x] = tileId
-              newTiles[tileId] = {
-                ...state.tiles[tileId],
-                position: [x, newY],
-              }
-              newY++
-            }
+          if (!isNil(tileId)) {
+            newBoard[newY][x] = tileId;
+            newTiles[tileId] = {
+              ...state.tiles[tileId],
+              position: [x, newY],
+            };
+            newY++;
           }
         }
+      }
 
-        return {
-          ...state,
-          board: newBoard,
-          tiles: newTiles,
+      return {
+        ...state,
+        board: newBoard,
+        tiles: newTiles,
+      };
+    }
+
+    case "move_down": {
+      const newBoard = createBoard();
+      const newTiles: TileMap = {};
+
+      for (let x = 0; x < tileCountPerDimension; x++) {
+        let newY = tileCountPerDimension - 1; //cell at the top of the board has index 0
+
+        for (let y = 0; y < tileCountPerDimension; y++) {
+          const tileId = state.board[y][x];
+
+          if (!isNil(tileId)) {
+            newBoard[newY][x] = tileId;
+            newTiles[tileId] = {
+              ...state.tiles[tileId],
+              position: [x, newY],
+            };
+            newY--;
+          }
         }
       }
+
+      return {
+        ...state,
+        board: newBoard,
+        tiles: newTiles,
+      };
+    }
 
     default:
       return state;

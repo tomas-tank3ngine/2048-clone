@@ -4,4 +4,4 @@ export type Tile = {
   value: number;
 };
 
-export type TileMap = { [id: string]: Tile }
+export type TileMap = { [id: string]: Tile };
