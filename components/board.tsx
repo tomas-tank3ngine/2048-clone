@@ -1,7 +1,12 @@
 import styles from "@/styles/board.module.css";
 import Tile from "./tile";
+import { useEffect, useReducer } from "react";
+import gameReducer, { initialState } from "@/reducers/game-reducer";
+import {Tile as TileModel } from "@//models/tile"
 
 export default function Board() {
+  const [gameState, dispatch] = useReducer(gameReducer, initialState)
+
   const renderGrid = () => {
     const cells: JSX.Element[] = [];
     const totalCellsCount = 16;
@@ -13,10 +18,21 @@ export default function Board() {
     return cells;
   };
 
+  const renderTiles = () =>{
+    return Object.values(gameState.tiles).map((tile: TileModel, index: number)=>{
+      return <Tile key={`${index}`} {...tile}/> //spread the tile modal to the tile component
+    })
+  }
+
+  useEffect(()=>{
+    dispatch({ type: "create_tile", tile: {position: [0, 1], value: 2}})
+    dispatch({ type: "create_tile", tile: {position: [0, 2], value: 2}})
+  }, [])
+
   return (
     <div className={styles.board}>
       <div className={styles.tiles}>
-        <Tile />
+        {renderTiles()}
       </div>
       <div className={styles.grid}>{renderGrid()}</div>
     </div>
