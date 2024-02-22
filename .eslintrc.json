@@ -1,3 +1,5 @@
+// Contains instructions for how our code is supposed to be written
+// In general Next.js comes well configured
 {
   "extends": "next/core-web-vitals"
 }
