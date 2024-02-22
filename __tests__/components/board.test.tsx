@@ -9,4 +9,11 @@ describe("Board", () => {
 
     expect(cellElements.length).toEqual(16);
   });
+
+  it("should render board with 2 tiles", () => {
+    const { container } = render(<Board />);
+    const tiles = container.querySelectorAll(".tile"); //Queries all elements with the 'cell' class
+
+    expect(tiles.length).toEqual(2);
+  });
 });
