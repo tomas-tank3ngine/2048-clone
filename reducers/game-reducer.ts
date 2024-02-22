@@ -1,7 +1,7 @@
 //reducer is a function that takes 2 args, the current state and an action.
 //action will be used to compute a new state from the given state.
 //actions are instructions that tell state to change in a given way.
-
+import { isNil } from "lodash";
 import { Tile, TileMap } from "@/models/tile";
 import { uid } from "uid";
 import { tileCountPerDimension } from "@/constants";
@@ -48,6 +48,31 @@ export default function gameReducer(
         //iterate through board state and scan all x and y arrays, then update the position
         //of each tile up to the first free cell starting from the top of the column.
 
+        const newBoard = createBoard();
+        const newTiles: TileMap = {}
+
+        for (let x = 0; x < tileCountPerDimension; x++) {
+          let newY = 0; //cell at the top of the board has index 0
+
+          for (let y = 0; y < tileCountPerDimension; y++) {
+            const tileId = state.board[y][x]
+
+            if(!isNil(tileId)) {
+              newBoard[newY][x] = tileId
+              newTiles[tileId] = {
+                ...state.tiles[tileId],
+                position: [x, newY],
+              }
+              newY++
+            }
+          }
+        }
+
+        return {
+          ...state,
+          board: newBoard,
+          tiles: newTiles,
+        }
       }
 
     default:

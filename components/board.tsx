@@ -9,6 +9,19 @@ export default function Board() {
 
   const initialized = useRef(false);
 
+  const handleKeyDown = (e: KeyboardEvent) => {
+    e.preventDefault()
+
+    switch (e.code) {
+      case "ArrowUp":
+        dispatch({type: "move_up"})
+        break;
+
+      default:
+        break;
+    }
+  }
+
   const renderGrid = () => {
     const cells: JSX.Element[] = [];
     const totalCellsCount = 16;
