@@ -2,14 +2,15 @@
 //action will be used to compute a new state from the given state.
 //actions are instructions that tell state to change in a given way.
 
-import { Tile } from "@/models/tile";
+import { Tile, TileMap } from "@/models/tile";
 import { uid } from "uid";
+import { tileCountPerDimension } from "@/constants";
 
 //this is an array of many arrays of strings
-type State = { board: string[][]; tiles: { [id: string]: Tile } };
-type Action = { type: "create_tile"; tile: Tile };
+type State = { board: string[][]; tiles: TileMap };
+type Action = { type: "create_tile"; tile: Tile } | { type: "move_up"};
 
-function createBoard(tileCountPerDimension: number = 4) {
+function createBoard() {
   const board: string[][] = [];
 
   for (let i = 0; i < tileCountPerDimension; i++) {
@@ -43,7 +44,11 @@ export default function gameReducer(
         };
       }
 
-      break;
+      case "move_up": {
+        //iterate through board state and scan all x and y arrays, then update the position
+        //of each tile up to the first free cell starting from the top of the column.
+
+      }
 
     default:
       return state;
