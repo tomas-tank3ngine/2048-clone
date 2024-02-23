@@ -43,7 +43,7 @@ export default function gameReducer(
         board: newBoard,
         tiles: {
           ...state.tiles,
-          [tileId]: {id: tileId, ...action.tile},
+          [tileId]: { id: tileId, ...action.tile },
         },
       };
     }
@@ -68,11 +68,14 @@ export default function gameReducer(
             //Stacking tiles
             //since we are checking from the direction we are stacking towards (swiping up - start check from top)
             //the previous tile will be above the current tile
+
             if (previousTile?.value === currentTile.value) {
+              //merging tiles
               newTiles[previousTile.id as string] = {
                 ...previousTile,
-                value: previousTile.value * 2, //-1 because we are stacking moving up
+                value: previousTile.value * 2,
               };
+
               newTiles[tileId] = {
                 ...currentTile,
                 position: [x, newY - 1], //-1 because we are stacking moving up
@@ -115,6 +118,10 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
+              newTiles[previousTile.id as string] = {
+                ...previousTile,
+                value: previousTile.value * 2,
+              };
               newTiles[tileId] = {
                 ...currentTile,
                 position: [x, newY + 1],
@@ -155,6 +162,11 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
+              newTiles[previousTile.id as string] = {
+                ...previousTile,
+                value: previousTile.value * 2,
+              };
+
               newTiles[tileId] = {
                 ...currentTile,
                 position: [newX - 1, y],
@@ -195,6 +207,11 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
+              newTiles[previousTile.id as string] = {
+                ...previousTile,
+                value: previousTile.value * 2,
+              };
+
               newTiles[tileId] = {
                 ...currentTile,
                 position: [newX + 1, y],
