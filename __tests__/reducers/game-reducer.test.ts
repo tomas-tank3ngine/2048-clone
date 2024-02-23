@@ -98,6 +98,42 @@ describe("gameReducer", () => {
       expect(isNil(stateAfter.board[1][0])).toBeTruthy(); //Checking that the starting position of the tiles is empty bc tiels have moved
       expect(isNil(stateAfter.board[3][1])).toBeTruthy();
     });
+
+    it("should stack tiles with the same value on top each other", () => {
+      const tile1: Tile = {
+        position: [0, 1],
+        value: 2,
+      };
+      const tile2: Tile = {
+        position: [0, 3],
+        value: 2,
+      };
+
+      const { result } = renderHook(() =>
+        useReducer(gameReducer, initialState),
+      );
+      const [, dispatch] = result.current; //extract dispatch (action) - disregarding the first value which is state
+
+      act(() => {
+        dispatch({ type: "create_tile", tile: tile1 });
+        dispatch({ type: "create_tile", tile: tile2 });
+      });
+
+      const [stateBefore] = result.current;
+      // x and y positions are reversed: y comes first, then x (due to the nested array)
+      expect(isNil(stateBefore.board[0][0])).toBeTruthy();
+      expect(typeof stateBefore.board[1][0]).toBe("string");
+      expect(isNil(stateBefore.board[2][0])).toBeTruthy();
+      expect(typeof stateBefore.board[3][0]).toBe("string");
+
+      act(() => dispatch({ type: "move_up" }));
+
+      const [stateAfter] = result.current;
+      expect(typeof stateAfter.board[0][0]).toBe("string");
+      expect(isNil(stateAfter.board[1][0])).toBeTruthy(); //Checking that the starting position of the tiles is empty bc tiels have moved
+      expect(isNil(stateAfter.board[2][0])).toBeTruthy();
+      expect(isNil(stateAfter.board[3][0])).toBeTruthy();
+    });
   });
 
   //Horizontal movement tests
@@ -174,4 +210,6 @@ describe("gameReducer", () => {
       expect(isNil(stateAfter.board[3][1])).toBeTruthy();
     });
   });
+
+
 });
