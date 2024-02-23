@@ -22,7 +22,8 @@ describe("gameReducer", () => {
       const [state] = result.current;
 
       expect(state.board[0][0]).toBeDefined();
-      expect(Object.values(state.tiles)).toEqual([tile]);
+      expect(Object.values(state.tiles)).toEqual([
+        {id: state.board[0][0], ...tile}]);
     });
   });
 
@@ -167,6 +168,42 @@ describe("gameReducer", () => {
 
       const [stateAfter] = result.current;
       expect(typeof stateAfter.board[0][0]).toBe("string");
+      expect(isNil(stateAfter.board[1][0])).toBeTruthy(); //Checking that the starting position of the tiles is empty bc tiels have moved
+      expect(isNil(stateAfter.board[2][0])).toBeTruthy();
+      expect(isNil(stateAfter.board[3][0])).toBeTruthy();
+    });
+
+    it("should merge tiles with the same value", () => {
+      const tile1: Tile = {
+        position: [0, 1],
+        value: 2,
+      };
+      const tile2: Tile = {
+        position: [0, 3],
+        value: 2,
+      };
+
+      const { result } = renderHook(() =>
+        useReducer(gameReducer, initialState),
+      );
+      const [, dispatch] = result.current; //extract dispatch (action) - disregarding the first value which is state
+
+      act(() => {
+        dispatch({ type: "create_tile", tile: tile1 });
+        dispatch({ type: "create_tile", tile: tile2 });
+      });
+
+      const [stateBefore] = result.current;
+
+      expect(isNil(stateBefore.board[0][0])).toBeTruthy();
+      expect(stateBefore.tiles[stateBefore.board[1][0]].value).toBe(2);
+      expect(isNil(stateBefore.board[2][0])).toBeTruthy();
+      expect(stateBefore.tiles[stateBefore.board[3][0]].value).toBe(2);
+
+      act(() => dispatch({ type: "move_up" }));
+
+      const [stateAfter] = result.current;
+      expect(stateAfter.tiles[stateAfter.board[0][0]].value).toBe(4);
       expect(isNil(stateAfter.board[1][0])).toBeTruthy(); //Checking that the starting position of the tiles is empty bc tiels have moved
       expect(isNil(stateAfter.board[2][0])).toBeTruthy();
       expect(isNil(stateAfter.board[3][0])).toBeTruthy();

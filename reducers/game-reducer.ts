@@ -43,7 +43,7 @@ export default function gameReducer(
         board: newBoard,
         tiles: {
           ...state.tiles,
-          [tileId]: action.tile,
+          [tileId]: {id: tileId, ...action.tile},
         },
       };
     }
@@ -69,9 +69,13 @@ export default function gameReducer(
             //since we are checking from the direction we are stacking towards (swiping up - start check from top)
             //the previous tile will be above the current tile
             if (previousTile?.value === currentTile.value) {
+              newTiles[previousTile.id as string] = {
+                ...previousTile,
+                value: previousTile.value * 2, //-1 because we are stacking moving up
+              };
               newTiles[tileId] = {
                 ...currentTile,
-                position: [x, newY - 1], //-1 because we stacking moving up
+                position: [x, newY - 1], //-1 because we are stacking moving up
               };
               previousTile = undefined; //remove prev tile
               continue; //continue within the switch statement
