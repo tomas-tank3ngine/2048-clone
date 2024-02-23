@@ -5,15 +5,14 @@ import { isNil } from "lodash";
 import { useReducer } from "react";
 
 describe("gameReducer", () => {
-
-  describe("clean_up", ()=>{
-    it("should remove tiles that are not referenced on the board state", ()=>{
+  describe("clean_up", () => {
+    it("should remove tiles that are not referenced on the board state", () => {
       const tile1: Tile = {
         position: [0, 1],
         value: 2,
       };
       const tile2: Tile = {
-        position: [1, 3],
+        position: [0, 3],
         value: 2,
       };
 
@@ -25,18 +24,18 @@ describe("gameReducer", () => {
       act(() => {
         dispatch({ type: "create_tile", tile: tile1 });
         dispatch({ type: "create_tile", tile: tile2 });
-        dispatch({ type: "move_up" })
+        dispatch({ type: "move_up" });
       });
 
       const [stateBefore] = result.current;
-      expect(Object.values(stateBefore.tiles)).toHaveLength(2)
+      expect(Object.values(stateBefore.tiles)).toHaveLength(2);
 
-      act(() => dispatch({ type: "clean_up"}))
+      act(() => dispatch({ type: "clean_up" }));
 
       const [stateAfter] = result.current;
-      expect(Object.values(stateAfter.tiles)).toHaveLength(1)
-    })
-  })
+      expect(Object.values(stateAfter.tiles)).toHaveLength(1);
+    });
+  });
 
   describe("create_tile", () => {
     it("should create a new tile", () => {
