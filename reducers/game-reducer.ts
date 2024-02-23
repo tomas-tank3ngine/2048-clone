@@ -1,7 +1,7 @@
 //reducer is a function that takes 2 args, the current state and an action.
 //action will be used to compute a new state from the given state.
 //actions are instructions that tell state to change in a given way.
-import { isNil } from "lodash";
+import { isNil, flattenDeep } from "lodash";
 import { Tile, TileMap } from "@/models/tile";
 import { uid } from "uid";
 import { tileCountPerDimension } from "@/constants";
@@ -13,7 +13,8 @@ type Action =
   | { type: "move_up" }
   | { type: "move_down" }
   | { type: "move_left" }
-  | { type: "move_right" };
+  | { type: "move_right" }
+  | { type: "clean_up" };
 
 function createBoard() {
   const board: string[][] = [];
@@ -32,6 +33,30 @@ export default function gameReducer(
   action: Action,
 ) {
   switch (action.type) {
+    case "clean_up": {
+      const flattenBoard = flattenDeep(state.board);
+      const newTiles: TileMap = flattenBoard.reduce(
+        (result, tileId: string) => {
+          //check if the current cell has a tile id
+          if (isNil(tileId)) {
+            return result;
+          }
+
+          return {
+            ...result,
+            [tileId]: state.tiles[tileId],
+          };
+        },
+        {},
+      );
+
+      //replace state with updated tiles hashmap
+      return {
+        ...state,
+        tiles: newTiles,
+      };
+    }
+
     case "create_tile": {
       const tileId = uid();
       const [x, y] = action.tile.position;

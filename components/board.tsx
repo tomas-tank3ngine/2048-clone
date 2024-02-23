@@ -32,6 +32,8 @@ export default function Board() {
       default:
         break;
     }
+
+    dispatch({ type: "clean_up" });
   };
 
   const renderGrid = () => {
