@@ -49,24 +49,43 @@ export default function gameReducer(
     }
 
     case "move_up": {
-      //iterate through board state and scan all x and y arrays, then update the position
-      //of each tile up to the first free cell starting from the top of the column.
+      //iterate through board state and scan all x and y arrays
+      //update the position of each tile up to the first free cell starting from the top of the column.
 
-      const newBoard = createBoard();
-      const newTiles: TileMap = {};
+      const newBoard = createBoard(); //4x4 grid (nested array [][])
+      const newTiles: TileMap = {}; //empty tilemap see tile.ts in models
 
       for (let x = 0; x < tileCountPerDimension; x++) {
         let newY = 0; //cell at the top of the board has index 0
+        let previousTile: Tile | undefined;
 
         for (let y = 0; y < tileCountPerDimension; y++) {
           const tileId = state.board[y][x];
+          const currentTile = state.tiles[tileId]
 
+          //check for a tile
           if (!isNil(tileId)) {
+
+            //Stacking tiles
+            //since we are checking from the direction we are stacking towards (swiping up - start check from top)
+            //the previous tile will be above the current tile
+            if (previousTile?.value === currentTile.value){
+              newTiles[tileId] = {
+                ...currentTile,
+                position: [x, newY -1] //-1 because we stacking moving up
+              }
+              previousTile = undefined //remove prev tile
+              continue //continue within the switch statement
+            }
+
+            //Using a temporary newBoard, notify that there is a tile at this location and pass that tile
             newBoard[newY][x] = tileId;
+            //add the current tile to the newTiles, but give it the new position (moved all the way up)
             newTiles[tileId] = {
-              ...state.tiles[tileId],
+              ...currentTile,
               position: [x, newY],
             };
+            previousTile = newTiles[tileId] //make sure we update the 'previous tile' with the new tile
             newY++;
           }
         }
@@ -84,7 +103,7 @@ export default function gameReducer(
       const newTiles: TileMap = {};
 
       for (let x = 0; x < tileCountPerDimension; x++) {
-        let newY = tileCountPerDimension - 1; //cell at the top of the board has index 0
+        let newY = tileCountPerDimension - 1;
 
         for (let y = 0; y < tileCountPerDimension; y++) {
           const tileId = state.board[y][x];
@@ -112,7 +131,7 @@ export default function gameReducer(
       const newTiles: TileMap = {};
 
       for (let y = 0; y < tileCountPerDimension; y++) {
-        let newX = 0; //cell at the left of the board has index 0
+        let newX = 0;
 
         for (let x = 0; x < tileCountPerDimension; x++) {
           const tileId = state.board[y][x];
@@ -140,7 +159,7 @@ export default function gameReducer(
       const newTiles: TileMap = {};
 
       for (let y = 0; y < tileCountPerDimension; y++) {
-        let newX = tileCountPerDimension - 1; //cell at the left of the board has index 0
+        let newX = tileCountPerDimension - 1;
 
         for (let x = 0; x < tileCountPerDimension; x++) {
           const tileId = state.board[y][x];
