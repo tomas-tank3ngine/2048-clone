@@ -61,21 +61,20 @@ export default function gameReducer(
 
         for (let y = 0; y < tileCountPerDimension; y++) {
           const tileId = state.board[y][x];
-          const currentTile = state.tiles[tileId]
+          const currentTile = state.tiles[tileId];
 
           //check for a tile
           if (!isNil(tileId)) {
-
             //Stacking tiles
             //since we are checking from the direction we are stacking towards (swiping up - start check from top)
             //the previous tile will be above the current tile
-            if (previousTile?.value === currentTile.value){
+            if (previousTile?.value === currentTile.value) {
               newTiles[tileId] = {
                 ...currentTile,
-                position: [x, newY -1] //-1 because we stacking moving up
-              }
-              previousTile = undefined //remove prev tile
-              continue //continue within the switch statement
+                position: [x, newY - 1], //-1 because we stacking moving up
+              };
+              previousTile = undefined; //remove prev tile
+              continue; //continue within the switch statement
             }
 
             //Using a temporary newBoard, notify that there is a tile at this location and pass that tile
@@ -85,7 +84,7 @@ export default function gameReducer(
               ...currentTile,
               position: [x, newY],
             };
-            previousTile = newTiles[tileId] //make sure we update the 'previous tile' with the new tile
+            previousTile = newTiles[tileId]; //make sure we update the 'previous tile' with the new tile
             newY++;
           }
         }
@@ -104,16 +103,28 @@ export default function gameReducer(
 
       for (let x = 0; x < tileCountPerDimension; x++) {
         let newY = tileCountPerDimension - 1;
+        let previousTile: Tile | undefined;
 
         for (let y = 0; y < tileCountPerDimension; y++) {
           const tileId = state.board[y][x];
+          const currentTile = state.tiles[tileId];
 
           if (!isNil(tileId)) {
+            if (previousTile?.value === currentTile.value) {
+              newTiles[tileId] = {
+                ...currentTile,
+                position: [x, newY + 1],
+              };
+              previousTile = undefined;
+              continue;
+            }
+
             newBoard[newY][x] = tileId;
             newTiles[tileId] = {
-              ...state.tiles[tileId],
+              ...currentTile,
               position: [x, newY],
             };
+            previousTile = newTiles[tileId];
             newY--;
           }
         }
@@ -132,16 +143,28 @@ export default function gameReducer(
 
       for (let y = 0; y < tileCountPerDimension; y++) {
         let newX = 0;
+        let previousTile: Tile | undefined;
 
         for (let x = 0; x < tileCountPerDimension; x++) {
           const tileId = state.board[y][x];
+          const currentTile = state.tiles[tileId];
 
           if (!isNil(tileId)) {
+            if (previousTile?.value === currentTile.value) {
+              newTiles[tileId] = {
+                ...currentTile,
+                position: [newX - 1, y],
+              };
+              previousTile = undefined;
+              continue;
+            }
+
             newBoard[y][newX] = tileId;
             newTiles[tileId] = {
-              ...state.tiles[tileId],
+              ...currentTile,
               position: [newX, y],
             };
+            previousTile = newTiles[tileId];
             newX++;
           }
         }
@@ -160,16 +183,27 @@ export default function gameReducer(
 
       for (let y = 0; y < tileCountPerDimension; y++) {
         let newX = tileCountPerDimension - 1;
+        let previousTile: Tile | undefined;
 
         for (let x = 0; x < tileCountPerDimension; x++) {
           const tileId = state.board[y][x];
+          const currentTile = state.tiles[tileId];
 
           if (!isNil(tileId)) {
+            if (previousTile?.value === currentTile.value) {
+              newTiles[tileId] = {
+                ...currentTile,
+                position: [newX + 1, y],
+              };
+              previousTile = undefined;
+              continue;
+            }
             newBoard[y][newX] = tileId;
             newTiles[tileId] = {
-              ...state.tiles[tileId],
+              ...currentTile,
               position: [newX, y],
             };
+            previousTile = newTiles[tileId];
             newX--;
           }
         }
