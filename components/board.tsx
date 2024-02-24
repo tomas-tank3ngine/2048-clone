@@ -35,7 +35,6 @@ export default function Board() {
     }
 
     setTimeout(() => dispatch({ type: "clean_up" }), mergeAnimationDuration);
-
   };
 
   const renderGrid = () => {
