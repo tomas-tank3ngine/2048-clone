@@ -1,41 +1,47 @@
 import styles from "@/styles/board.module.css";
 import Tile from "./tile";
-import { useEffect, useReducer, useRef } from "react";
-import gameReducer, { initialState } from "@/reducers/game-reducer";
+import { useEffect, useRef, useContext, useCallback } from "react";
 import { Tile as TileModel } from "@//models/tile";
 import { mergeAnimationDuration } from "@/constants";
+import { GameContext } from "@/context/game-context";
 
 export default function Board() {
-  const [gameState, dispatch] = useReducer(gameReducer, initialState);
+  const { appendRandomTile, getTiles, dispatch } = useContext(GameContext);
 
   const initialized = useRef(false);
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    e.preventDefault();
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      e.preventDefault();
 
-    switch (e.code) {
-      case "ArrowUp":
-        dispatch({ type: "move_up" });
-        break;
+      switch (e.code) {
+        case "ArrowUp":
+          dispatch({ type: "move_up" });
+          break;
 
-      case "ArrowDown":
-        dispatch({ type: "move_down" });
-        break;
+        case "ArrowDown":
+          dispatch({ type: "move_down" });
+          break;
 
-      case "ArrowLeft":
-        dispatch({ type: "move_left" });
-        break;
+        case "ArrowLeft":
+          dispatch({ type: "move_left" });
+          break;
 
-      case "ArrowRight":
-        dispatch({ type: "move_right" });
-        break;
+        case "ArrowRight":
+          dispatch({ type: "move_right" });
+          break;
 
-      default:
-        break;
-    }
+        default:
+          break;
+      }
 
-    setTimeout(() => dispatch({ type: "clean_up" }), mergeAnimationDuration);
-  };
+      setTimeout(() => {
+        dispatch({ type: "clean_up" });
+        appendRandomTile();
+      }, mergeAnimationDuration);
+    },
+    [appendRandomTile, dispatch],
+  );
 
   const renderGrid = () => {
     const cells: JSX.Element[] = [];
@@ -48,9 +54,9 @@ export default function Board() {
   };
 
   const renderTiles = () => {
-    return Object.values(gameState.tiles).map(
-      (tile: TileModel, index: number) => {
-        return <Tile key={`${index}`} {...tile} />; //spread the tile modal to the tile component
+    return getTiles().map(
+      (tile: TileModel) => {
+        return <Tile key={`${tile.id}`} {...tile} />; //spread the tile modal to the tile component
       },
     );
   };
@@ -62,7 +68,7 @@ export default function Board() {
       dispatch({ type: "create_tile", tile: { position: [0, 1], value: 2 } });
       initialized.current = true;
     }
-  }, []);
+  }, [dispatch]);
 
   //key input
   useEffect(() => {
@@ -71,7 +77,7 @@ export default function Board() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [handleKeyDown]);
 
   return (
     <div className={styles.board}>

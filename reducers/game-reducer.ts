@@ -7,7 +7,7 @@ import { uid } from "uid";
 import { tileCountPerDimension } from "@/constants";
 
 //this is an array of many arrays of strings
-type State = { board: string[][]; tiles: TileMap };
+type State = { board: string[][]; tiles: TileMap; tilesByIds: string[] };
 type Action =
   | { type: "create_tile"; tile: Tile }
   | { type: "move_up" }
@@ -26,7 +26,7 @@ function createBoard() {
   return board;
 }
 
-export const initialState: State = { board: createBoard(), tiles: {} }; //Need to export so that the default export can leave the component
+export const initialState: State = { board: createBoard(), tiles: {}, tilesByIds: [] }; //Need to export so that the default export can leave the component
 
 export default function gameReducer(
   state: State = initialState,
@@ -54,6 +54,7 @@ export default function gameReducer(
       return {
         ...state,
         tiles: newTiles,
+        tilesByIds: Object.keys(newTiles), //replace with all the keys of the hashmap
       };
     }
 
@@ -70,6 +71,7 @@ export default function gameReducer(
           ...state.tiles,
           [tileId]: { id: tileId, ...action.tile },
         },
+        tilesByIds: [...state.tilesByIds, tileId] //add a new tile to the end of the list
       };
     }
 
@@ -137,7 +139,7 @@ export default function gameReducer(
         let newY = tileCountPerDimension - 1;
         let previousTile: Tile | undefined;
 
-        for (let y = 0; y < tileCountPerDimension; y++) {
+        for (let y = tileCountPerDimension - 1; y >= 0; y--) {
           const tileId = state.board[y][x];
           const currentTile = state.tiles[tileId];
 
@@ -226,7 +228,7 @@ export default function gameReducer(
         let newX = tileCountPerDimension - 1;
         let previousTile: Tile | undefined;
 
-        for (let x = 0; x < tileCountPerDimension; x++) {
+        for (let x = tileCountPerDimension - 1; x >= 0; x--) {
           const tileId = state.board[y][x];
           const currentTile = state.tiles[tileId];
 
