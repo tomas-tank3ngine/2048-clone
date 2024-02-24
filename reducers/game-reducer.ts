@@ -139,7 +139,7 @@ export default function gameReducer(
         let newY = tileCountPerDimension - 1;
         let previousTile: Tile | undefined;
 
-        for (let y = 0; y < tileCountPerDimension; y++) {
+        for (let y = tileCountPerDimension - 1; y >= 0; y--) {
           const tileId = state.board[y][x];
           const currentTile = state.tiles[tileId];
 
@@ -228,7 +228,7 @@ export default function gameReducer(
         let newX = tileCountPerDimension - 1;
         let previousTile: Tile | undefined;
 
-        for (let x = 0; x < tileCountPerDimension; x++) {
+        for (let x = tileCountPerDimension - 1; x >= 0; x--) {
           const tileId = state.board[y][x];
           const currentTile = state.tiles[tileId];
 
