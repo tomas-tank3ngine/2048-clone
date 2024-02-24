@@ -1,12 +1,13 @@
 import styles from "@/styles/board.module.css";
 import Tile from "./tile";
-import { useEffect, useReducer, useRef } from "react";
-import gameReducer, { initialState } from "@/reducers/game-reducer";
+import { useEffect, useRef, useContext } from "react";
 import { Tile as TileModel } from "@//models/tile";
 import { mergeAnimationDuration } from "@/constants";
+import { GameContext } from "@/context/game-context";
 
 export default function Board() {
-  const [gameState, dispatch] = useReducer(gameReducer, initialState);
+  const { appendRandomTile, gameState, dispatch } = useContext(GameContext)
+
 
   const initialized = useRef(false);
 
@@ -34,7 +35,10 @@ export default function Board() {
         break;
     }
 
-    setTimeout(() => dispatch({ type: "clean_up" }), mergeAnimationDuration);
+    setTimeout(() => {
+      dispatch({ type: "clean_up" })
+      appendRandomTile()
+    }, mergeAnimationDuration);
   };
 
   const renderGrid = () => {
@@ -62,7 +66,7 @@ export default function Board() {
       dispatch({ type: "create_tile", tile: { position: [0, 1], value: 2 } });
       initialized.current = true;
     }
-  }, []);
+  }, [dispatch]);
 
   //key input
   useEffect(() => {
