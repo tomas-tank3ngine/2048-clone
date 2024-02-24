@@ -3,6 +3,7 @@ import Tile from "./tile";
 import { useEffect, useReducer, useRef } from "react";
 import gameReducer, { initialState } from "@/reducers/game-reducer";
 import { Tile as TileModel } from "@//models/tile";
+import { mergeAnimationDuration } from "@/constants";
 
 export default function Board() {
   const [gameState, dispatch] = useReducer(gameReducer, initialState);
@@ -33,7 +34,8 @@ export default function Board() {
         break;
     }
 
-    dispatch({ type: "clean_up" });
+    setTimeout(() => dispatch({ type: "clean_up" }), mergeAnimationDuration);
+
   };
 
   const renderGrid = () => {
