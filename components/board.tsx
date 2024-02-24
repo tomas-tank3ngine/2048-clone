@@ -6,40 +6,42 @@ import { mergeAnimationDuration } from "@/constants";
 import { GameContext } from "@/context/game-context";
 
 export default function Board() {
-  const { appendRandomTile, gameState, dispatch } = useContext(GameContext)
-
+  const { appendRandomTile, gameState, dispatch } = useContext(GameContext);
 
   const initialized = useRef(false);
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    e.preventDefault();
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      e.preventDefault();
 
-    switch (e.code) {
-      case "ArrowUp":
-        dispatch({ type: "move_up" });
-        break;
+      switch (e.code) {
+        case "ArrowUp":
+          dispatch({ type: "move_up" });
+          break;
 
-      case "ArrowDown":
-        dispatch({ type: "move_down" });
-        break;
+        case "ArrowDown":
+          dispatch({ type: "move_down" });
+          break;
 
-      case "ArrowLeft":
-        dispatch({ type: "move_left" });
-        break;
+        case "ArrowLeft":
+          dispatch({ type: "move_left" });
+          break;
 
-      case "ArrowRight":
-        dispatch({ type: "move_right" });
-        break;
+        case "ArrowRight":
+          dispatch({ type: "move_right" });
+          break;
 
-      default:
-        break;
-    }
+        default:
+          break;
+      }
 
-    setTimeout(() => {
-      dispatch({ type: "clean_up" })
-      appendRandomTile()
-    }, mergeAnimationDuration);
-  },[appendRandomTile, dispatch]);
+      setTimeout(() => {
+        dispatch({ type: "clean_up" });
+        appendRandomTile();
+      }, mergeAnimationDuration);
+    },
+    [appendRandomTile, dispatch],
+  );
 
   const renderGrid = () => {
     const cells: JSX.Element[] = [];
