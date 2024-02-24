@@ -2,11 +2,10 @@ import styles from "@/styles/board.module.css";
 import Tile from "./tile";
 import { useEffect, useRef, useContext, useCallback } from "react";
 import { Tile as TileModel } from "@//models/tile";
-import { mergeAnimationDuration } from "@/constants";
 import { GameContext } from "@/context/game-context";
 
 export default function Board() {
-  const { appendRandomTile, getTiles, dispatch } = useContext(GameContext);
+  const { getTiles, dispatch } = useContext(GameContext);
 
   const initialized = useRef(false);
 
@@ -34,13 +33,8 @@ export default function Board() {
         default:
           break;
       }
-
-      setTimeout(() => {
-        dispatch({ type: "clean_up" });
-        appendRandomTile();
-      }, mergeAnimationDuration);
     },
-    [appendRandomTile, dispatch],
+    [dispatch],
   );
 
   const renderGrid = () => {
@@ -54,11 +48,9 @@ export default function Board() {
   };
 
   const renderTiles = () => {
-    return getTiles().map(
-      (tile: TileModel) => {
-        return <Tile key={`${tile.id}`} {...tile} />; //spread the tile modal to the tile component
-      },
-    );
+    return getTiles().map((tile: TileModel) => (
+      <Tile key={`${tile.id}`} {...tile} /> //spread the tile model to the tile component
+    ));
   };
 
   //Initialize board
