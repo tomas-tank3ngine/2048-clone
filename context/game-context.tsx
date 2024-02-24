@@ -1,11 +1,12 @@
 import { tileCountPerDimension } from "@/constants";
+import { Tile } from "@/models/tile";
 import gameReducer, { initialState } from "@/reducers/game-reducer";
 import { isNil } from "lodash";
 import { PropsWithChildren, createContext, useReducer } from "react";
 
 export const GameContext = createContext({
   appendRandomTile: () => {},
-  gameState: initialState,
+  getTiles: () => [] as Tile[], //assigned an arrow func that returns an array, cast the array as a Tile model and array
   dispatch: (_: any) => {},
 }); //empty arrow function not required, but helps typescript reinforce the type
 
@@ -38,8 +39,12 @@ export default function GameProvider({ children }: PropsWithChildren) {
     }
   };
 
+  const getTiles = () => {
+    return gameState.tilesByIds.map((tileId: string) => gameState.tiles[tileId])
+  }
+
   return (
-    <GameContext.Provider value={{ appendRandomTile, gameState, dispatch }}>
+    <GameContext.Provider value={{ appendRandomTile, getTiles, dispatch }}>
       {children}
     </GameContext.Provider>
   );
