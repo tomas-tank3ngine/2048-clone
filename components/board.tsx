@@ -16,19 +16,19 @@ export default function Board() {
 
       switch (e.code) {
         case "ArrowUp":
-          moveTiles( "move_up" );
+          moveTiles("move_up");
           break;
 
         case "ArrowDown":
-          moveTiles( "move_down" );
+          moveTiles("move_down");
           break;
 
         case "ArrowLeft":
-          moveTiles( "move_left" );
+          moveTiles("move_left");
           break;
 
         case "ArrowRight":
-          moveTiles( "move_right" );
+          moveTiles("move_right");
           break;
 
         default:
@@ -42,15 +42,15 @@ export default function Board() {
     ({ deltaX, deltaY }: SwipeInput) => {
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
         if (deltaX > 0) {
-          moveTiles( "move_right" );
+          moveTiles("move_right");
         } else {
-          moveTiles( "move_left" );
+          moveTiles("move_left");
         }
       } else {
         if (deltaY > 0) {
-          moveTiles( "move_down" );
+          moveTiles("move_down");
         } else {
-          moveTiles( "move_up" );
+          moveTiles("move_up");
         }
       }
     },
