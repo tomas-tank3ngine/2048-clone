@@ -11,8 +11,10 @@ import { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 
 export default function Tile({ position, value }: TileProps) {
-  const isWideScreen = useMediaQuery({minWidth: 512})
-  const containerWidth = isWideScreen ? containerWidthDesktop : containerWidthMobile;
+  const isWideScreen = useMediaQuery({ minWidth: 512 });
+  const containerWidth = isWideScreen
+    ? containerWidthDesktop
+    : containerWidthMobile;
   const [scale, setScale] = useState(1);
   const previousValue = usePreviousProps(value); //auto detects the type (value: number)
   const hasChanged = previousValue != value;
