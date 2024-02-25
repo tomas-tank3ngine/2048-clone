@@ -1,6 +1,7 @@
 import Board from "@/components/board";
 import Head from "next/head";
 import styles from "@/styles/index.module.css";
+import Score from "@/components/score";
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
       </Head>
       <header>
         <h1>2048</h1>
-        {/* <Score/> */}
+        <Score/>
       </header>
       <main>
         <Board />

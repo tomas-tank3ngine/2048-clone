@@ -12,6 +12,7 @@ type State = {
   tiles: TileMap;
   tilesByIds: string[];
   hasChanged: boolean;
+  score: number;
 };
 type Action =
   | { type: "create_tile"; tile: Tile }
@@ -36,6 +37,7 @@ export const initialState: State = {
   tiles: {},
   tilesByIds: [],
   hasChanged: false,
+  score: 0,
 }; //Need to export so that the default export can leave the component
 
 export default function gameReducer(
@@ -93,6 +95,7 @@ export default function gameReducer(
       const newBoard = createBoard(); //4x4 grid (nested array [][])
       const newTiles: TileMap = {}; //empty tilemap see tile.ts in models
       let hasChanged = false;
+      let { score } = state; //desctructure score from state. We don't mutate state if we change score
 
       for (let x = 0; x < tileCountPerDimension; x++) {
         let newY = 0; //cell at the top of the board has index 0
@@ -110,6 +113,7 @@ export default function gameReducer(
 
             if (previousTile?.value === currentTile.value) {
               //merging tiles
+              score += previousTile.value * 2;
               newTiles[previousTile.id as string] = {
                 ...previousTile,
                 value: previousTile.value * 2,
@@ -142,11 +146,13 @@ export default function gameReducer(
         }
       }
 
+      //updated state gets returned
       return {
         ...state,
         board: newBoard,
         tiles: newTiles,
         hasChanged,
+        score,
       };
     }
 
@@ -154,6 +160,7 @@ export default function gameReducer(
       const newBoard = createBoard();
       const newTiles: TileMap = {};
       let hasChanged = false;
+      let { score } = state;
 
       for (let x = 0; x < tileCountPerDimension; x++) {
         let newY = tileCountPerDimension - 1;
@@ -165,6 +172,8 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
+              score += previousTile.value * 2;
+
               newTiles[previousTile.id as string] = {
                 ...previousTile,
                 value: previousTile.value * 2,
@@ -204,6 +213,7 @@ export default function gameReducer(
       const newBoard = createBoard();
       const newTiles: TileMap = {};
       let hasChanged = false;
+      let { score } = state;
 
       for (let y = 0; y < tileCountPerDimension; y++) {
         let newX = 0;
@@ -215,6 +225,7 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
+              score += previousTile.value * 2;
               newTiles[previousTile.id as string] = {
                 ...previousTile,
                 value: previousTile.value * 2,
@@ -256,6 +267,7 @@ export default function gameReducer(
       const newBoard = createBoard();
       const newTiles: TileMap = {};
       let hasChanged = false;
+      let { score } = state;
 
       for (let y = 0; y < tileCountPerDimension; y++) {
         let newX = tileCountPerDimension - 1;
@@ -267,6 +279,8 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
+              score += previousTile.value * 2;
+
               newTiles[previousTile.id as string] = {
                 ...previousTile,
                 value: previousTile.value * 2,
