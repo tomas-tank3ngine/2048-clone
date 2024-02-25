@@ -5,7 +5,7 @@ import { isNil } from "lodash";
 import { PropsWithChildren, createContext, useEffect, useReducer } from "react";
 
 export const GameContext = createContext({
-  appendRandomTile: () => {},
+  score: 0,
   getTiles: () => [] as Tile[], //assigned an arrow func that returns an array, cast the array as a Tile model and array
   dispatch: (_: any) => {},
 }); //empty arrow function not required, but helps typescript reinforce the type
@@ -55,7 +55,9 @@ export default function GameProvider({ children }: PropsWithChildren) {
   }, [gameState.hasChanged]);
 
   return (
-    <GameContext.Provider value={{ appendRandomTile, getTiles, dispatch }}>
+    <GameContext.Provider
+      value={{ score: gameState.score, getTiles, dispatch }}
+    >
       {children}
     </GameContext.Provider>
   );
