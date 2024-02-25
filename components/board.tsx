@@ -3,6 +3,7 @@ import Tile from "./tile";
 import { useEffect, useRef, useContext, useCallback } from "react";
 import { Tile as TileModel } from "@//models/tile";
 import { GameContext } from "@/context/game-context";
+import { SwipeInput } from "./mobile-swiper";
 
 export default function Board() {
   const { getTiles, dispatch } = useContext(GameContext);
@@ -36,6 +37,22 @@ export default function Board() {
     },
     [dispatch],
   );
+
+  const handleSwipe = useCallback(({deltaX, deltaY}: SwipeInput) => {
+    if(Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX > 0) {
+        dispatch({ type: "move_right" })
+      } else {
+        dispatch({ type: "move_left" })
+      }
+    } else {
+      if (deltaY > 0) {
+        dispatch({ type: "move_down" })
+      } else {
+        dispatch({ type: "move_up" })
+      }
+    }
+  }, [dispatch])
 
   const renderGrid = () => {
     const cells: JSX.Element[] = [];
