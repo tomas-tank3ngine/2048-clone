@@ -134,7 +134,7 @@ export default function gameReducer(
             previousTile = newTiles[tileId]; //make sure we update the 'previous tile' with the new tile
 
             //check if ANY tile has changed its position
-            if (!isEqual(currentTile.position, [x, newY])){
+            if (!isEqual(currentTile.position, [x, newY])) {
               hasChanged = true;
             }
             newY++;
@@ -184,7 +184,7 @@ export default function gameReducer(
               position: [x, newY],
             };
             previousTile = newTiles[tileId];
-            if (!isEqual(currentTile.position, [x, newY])){
+            if (!isEqual(currentTile.position, [x, newY])) {
               hasChanged = true;
             }
             newY--;
@@ -236,7 +236,7 @@ export default function gameReducer(
             };
             previousTile = newTiles[tileId];
 
-            if (!isEqual(currentTile.position, [newX, y])){
+            if (!isEqual(currentTile.position, [newX, y])) {
               hasChanged = true;
             }
             newX++;
@@ -286,7 +286,7 @@ export default function gameReducer(
               position: [newX, y],
             };
             previousTile = newTiles[tileId];
-            if (!isEqual(currentTile.position, [newX, y])){
+            if (!isEqual(currentTile.position, [newX, y])) {
               hasChanged = true;
             }
             newX--;

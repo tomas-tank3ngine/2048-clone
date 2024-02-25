@@ -40,11 +40,13 @@ export default function GameProvider({ children }: PropsWithChildren) {
   };
 
   const getTiles = () => {
-    return gameState.tilesByIds.map((tileId: string) => gameState.tiles[tileId])
-  }
+    return gameState.tilesByIds.map(
+      (tileId: string) => gameState.tiles[tileId],
+    );
+  };
 
   useEffect(() => {
-    if (gameState.hasChanged){
+    if (gameState.hasChanged) {
       setTimeout(() => {
         dispatch({ type: "clean_up" });
         appendRandomTile();
