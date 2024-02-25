@@ -14,7 +14,7 @@ export default function Home() {
       </Head>
       <header>
         <h1>2048</h1>
-        <Score/>
+        <Score />
       </header>
       <main>
         <Board />

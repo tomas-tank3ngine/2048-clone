@@ -11,7 +11,7 @@ export const GameContext = createContext({
 }); //empty arrow function not required, but helps typescript reinforce the type
 
 export default function GameProvider({ children }: PropsWithChildren) {
-  const [gameState, dispatch,] = useReducer(gameReducer, initialState);
+  const [gameState, dispatch] = useReducer(gameReducer, initialState);
 
   const getEmptyCells = () => {
     const results: [number, number][] = [];
@@ -55,7 +55,9 @@ export default function GameProvider({ children }: PropsWithChildren) {
   }, [gameState.hasChanged]);
 
   return (
-    <GameContext.Provider value={{ score: gameState.score, getTiles, dispatch }}>
+    <GameContext.Provider
+      value={{ score: gameState.score, getTiles, dispatch }}
+    >
       {children}
     </GameContext.Provider>
   );

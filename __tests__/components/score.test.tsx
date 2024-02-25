@@ -1,5 +1,5 @@
 import Board from "@/components/board";
-import Score from "@/components/score"
+import Score from "@/components/score";
 import GameProvider from "@/context/game-context";
 import { render } from "@testing-library/react";
 
